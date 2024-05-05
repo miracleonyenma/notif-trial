@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notif Trial</title>
+  </head>
+  <body>
+    <header>
+      <h1>Notification Trial</h1>
+    </header>
+    <main>
+      <p>
+        This is a simple notification trial. When the page is loaded, the
+        browser will ask for permission to show notifications. If the user
+        grants the permission, a notification will be shown.
+      </p>
+      <button onclick="showNotification()">Show Notification</button>
+    </main>
+  </body>
+  <script>
+    const requestPermission = (callback) => {
+      if ("Notification" in window) {
+        Notification.requestPermission().then((result) => {
+          if (result === "denied") {
+            console.log("User denied permission");
+            return;
+          } else if (result === "default") {
+            console.log("User closed the prompt");
+            return;
+          }
+          callback();
+        });
+      }
+    };
+
+    const showNotification = () => {
+      if ("Notification" in window) {
+        if (Notification.permission === "granted") {
+          const notification = new Notification("Hello World", {
+            body: "This is a notification from the browser",
+            icon: "https://via.placeholder.com/150",
+          });
+
+          notification.onclick = () => {
+            console.log("Notification clicked");
+          };
+        }
+      }
+    };
+
+    document.addEventListener("readystatechange", (event) => {
+      if (document.readyState === "complete") {
+        requestPermission(showNotification);
+      }
+    });
+  </script>
+</html>
